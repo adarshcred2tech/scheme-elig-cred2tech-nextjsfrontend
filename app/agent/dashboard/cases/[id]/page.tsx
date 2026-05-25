@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useAgentAuth } from '@/contexts/AgentAuthContext';
-import { casesApi } from '@/lib/services/api';
+import { casesApi, API_BASE_URL } from '@/lib/services/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -694,7 +694,7 @@ export default function CaseDetailPage() {
                     </div>
                   </div>
                   {doc.file_url ? (
-                    <a href={`http://localhost:3001${doc.file_url}`} target="_blank" rel="noopener noreferrer">
+                    <a href={`${API_BASE_URL}${doc.file_url}`} target="_blank" rel="noopener noreferrer">
                       <Button variant="ghost" size="sm" className="gap-1 flex-shrink-0">
                         <Download className="h-4 w-4" />
                         View
@@ -772,7 +772,7 @@ export default function CaseDetailPage() {
                     </div>
                   </div>
                   {req.status === 'UPLOADED' && req.file_url && (
-                    <a href={`http://localhost:3001${req.file_url}`} target="_blank" rel="noopener noreferrer">
+                    <a href={`${API_BASE_URL}${req.file_url}`} target="_blank" rel="noopener noreferrer">
                       <Button variant="ghost" size="sm" className="gap-1 flex-shrink-0">
                         <Download className="h-4 w-4" />
                         View

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useMsmeAuth } from '@/contexts/MsmeAuthContext';
-import { casesApi } from '@/lib/services/api';
+import { casesApi, API_BASE_URL } from '@/lib/services/api';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -616,7 +616,7 @@ export default function MsmeCaseDetailPage() {
                           </Button>
                         )}
                         {req.status === 'UPLOADED' && req.file_url && (
-                          <a href={`http://localhost:3001${req.file_url}`} target="_blank" rel="noopener noreferrer">
+                          <a href={`${API_BASE_URL}${req.file_url}`} target="_blank" rel="noopener noreferrer">
                             <Button variant="ghost" size="sm" className="gap-1">
                               <Download className="h-4 w-4" />
                               View

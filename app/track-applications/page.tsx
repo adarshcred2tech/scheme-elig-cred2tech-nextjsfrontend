@@ -35,7 +35,7 @@ import {
   RefreshCw,
   Trash2,
 } from 'lucide-react';
-import { casesApi } from '@/lib/services/api';
+import { casesApi, API_BASE_URL } from '@/lib/services/api';
 
 interface Case {
   id: string;
@@ -385,7 +385,7 @@ export default function TrackApplicationsPage() {
                         </Button>
                       )}
                       {req.status === 'UPLOADED' && req.file_url && (
-                        <a href={`http://localhost:3001${req.file_url}`} target="_blank" rel="noopener noreferrer">
+                        <a href={`${API_BASE_URL}${req.file_url}`} target="_blank" rel="noopener noreferrer">
                           <Button variant="ghost" size="sm" className="gap-1">
                             <Download className="h-4 w-4" />
                             View
