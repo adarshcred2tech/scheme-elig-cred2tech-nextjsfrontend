@@ -142,7 +142,7 @@ export const casesApi = {
     schemeId: string;
     schemeName?: string;
     applicationData?: any;
-  }) => fetchApi('/cases/internal/create-from-application', {
+  }) => fetchApi('/api/cases/internal/create-from-application', {
     method: 'POST',
     body: JSON.stringify(data),
   }, 'msme'),
@@ -152,39 +152,39 @@ export const casesApi = {
     if (msmeUserId) params.append('msmeUserId', msmeUserId.toString());
     if (status) params.append('status', status);
     const query = params.toString();
-    return fetchApi(`/cases/msme/my-cases${query ? '?' + query : ''}`, {}, 'msme');
+    return fetchApi(`/api/cases/msme/my-cases${query ? '?' + query : ''}`, {}, 'msme');
   },
 
-  getMsmeCaseDetails: (caseId: string, msmeUserId: number) => fetchApi(`/cases/msme/${caseId}?msmeUserId=${msmeUserId}`, {}, 'msme'),
+  getMsmeCaseDetails: (caseId: string, msmeUserId: number) => fetchApi(`/api/cases/msme/${caseId}?msmeUserId=${msmeUserId}`, {}, 'msme'),
 
-  deleteCase: (caseId: string, msmeUserId: number) => fetchApi(`/cases/msme/${caseId}?msmeUserId=${msmeUserId}`, {
+  deleteCase: (caseId: string, msmeUserId: number) => fetchApi(`/api/cases/msme/${caseId}?msmeUserId=${msmeUserId}`, {
     method: 'DELETE',
   }, 'msme'),
 
   // Agent endpoints
   getAgentCases: (status?: string) => {
     const query = status ? `?status=${status}` : '';
-    return fetchApi(`/cases/agent/my-cases${query}`, {}, 'agent');
+    return fetchApi(`/api/cases/agent/my-cases${query}`, {}, 'agent');
   },
   
-  getAgentCaseDetails: (caseId: string) => fetchApi(`/cases/agent/${caseId}`, {}, 'agent'),
+  getAgentCaseDetails: (caseId: string) => fetchApi(`/api/cases/agent/${caseId}`, {}, 'agent'),
   
-  updateCaseStatus: (caseId: string, status: string, notes?: string) => fetchApi(`/cases/agent/${caseId}/status`, {
+  updateCaseStatus: (caseId: string, status: string, notes?: string) => fetchApi(`/api/cases/agent/${caseId}/status`, {
     method: 'PUT',
     body: JSON.stringify({ status, notes }),
   }, 'agent'),
   
-  addCaseNote: (caseId: string, agentNotes: string) => fetchApi(`/cases/agent/${caseId}/notes`, {
+  addCaseNote: (caseId: string, agentNotes: string) => fetchApi(`/api/cases/agent/${caseId}/notes`, {
     method: 'PUT',
     body: JSON.stringify({ agentNotes, noteType: 'AGENT' }),
   }, 'agent'),
   
-  closeCase: (caseId: string, closureReason: string, closureNotes?: string) => fetchApi(`/cases/agent/${caseId}/close`, {
+  closeCase: (caseId: string, closureReason: string, closureNotes?: string) => fetchApi(`/api/cases/agent/${caseId}/close`, {
     method: 'PUT',
     body: JSON.stringify({ closureReason, closureNotes }),
   }, 'agent'),
   
-  getAgentCaseHistory: () => fetchApi('/cases/agent/history', {}, 'agent'),
+  getAgentCaseHistory: () => fetchApi('/api/cases/agent/history', {}, 'agent'),
 
   // ── Document upload (multipart — bypasses the JSON fetchApi wrapper) ───────
   uploadCaseDocument: async (caseId: string, file: File, documentTag?: string): Promise<any> => {
@@ -193,7 +193,7 @@ export const casesApi = {
     formData.append('file', file);
     if (documentTag) formData.append('documentTag', documentTag);
 
-    const response = await fetch(`${API_BASE_URL}/cases/agent/${caseId}/documents`, {
+    const response = await fetch(`${API_BASE_URL}/api/cases/agent/${caseId}/documents`, {
       method: 'POST',
       headers: token ? { Authorization: `Bearer ${token}` } : {},
       body: formData,
@@ -208,27 +208,27 @@ export const casesApi = {
   },
 
   getCaseDocuments: (caseId: string) =>
-    fetchApi(`/cases/agent/${caseId}/documents`, {}, 'agent'),
+    fetchApi(`/api/cases/agent/${caseId}/documents`, {}, 'agent'),
 
   logContactMSME: (caseId: string, method: string, notes?: string) =>
-    fetchApi(`/cases/agent/${caseId}/contact`, {
+    fetchApi(`/api/cases/agent/${caseId}/contact`, {
       method: 'PUT',
       body: JSON.stringify({ method, notes }),
     }, 'agent'),
 
   // ── Document requests (agent) ──────────────────────────────────────────────
   createDocumentRequest: (caseId: string, documentName: string, description?: string) =>
-    fetchApi(`/cases/agent/${caseId}/document-requests`, {
+    fetchApi(`/api/cases/agent/${caseId}/document-requests`, {
       method: 'POST',
       body: JSON.stringify({ documentName, description }),
     }, 'agent'),
 
   getDocumentRequests: (caseId: string) =>
-    fetchApi(`/cases/agent/${caseId}/document-requests`, {}, 'agent'),
+    fetchApi(`/api/cases/agent/${caseId}/document-requests`, {}, 'agent'),
 
   // ── Document requests (MSME) ───────────────────────────────────────────────
   getMsmeDocumentRequests: (msmeUserId: number) =>
-    fetchApi(`/cases/msme/document-requests?msmeUserId=${msmeUserId}`, {}, 'msme'),
+    fetchApi(`/api/cases/msme/document-requests?msmeUserId=${msmeUserId}`, {}, 'msme'),
 
   fulfillDocumentRequest: async (requestId: string, msmeUserId: number, file: File): Promise<any> => {
     const token = typeof window !== 'undefined' ? sessionStorage.getItem('msme_auth_token') : null;
@@ -236,7 +236,7 @@ export const casesApi = {
     formData.append('file', file);
 
     const response = await fetch(
-      `${API_BASE_URL}/cases/msme/document-requests/${requestId}/upload?msmeUserId=${msmeUserId}`,
+      `${API_BASE_URL}/api/cases/msme/document-requests/${requestId}/upload?msmeUserId=${msmeUserId}`,
       {
         method: 'POST',
         headers: token ? { Authorization: `Bearer ${token}` } : {},
