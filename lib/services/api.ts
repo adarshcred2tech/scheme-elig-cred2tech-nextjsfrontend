@@ -1,5 +1,5 @@
 // API Configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001';
 
 // Helper to get auth token
 const getToken = (type: 'agent' | 'admin' | 'msme') => {
@@ -80,24 +80,24 @@ export const agentAuthApi = {
     availability?: string;
     certifications?: string[];
     gender?: string;
-  }) => fetchApi('/agent-auth/register', {
+  }) => fetchApi('/api/agent-auth/register', {
     method: 'POST',
     body: JSON.stringify(data),
   }, 'msme'),
   
-  login: (email: string, password: string) => fetchApi('/agent-auth/login', {
+  login: (email: string, password: string) => fetchApi('/api/agent-auth/login', {
     method: 'POST',
     body: JSON.stringify({ email, password }),
   }, 'agent'),
   
-  getProfile: () => fetchApi('/agent-auth/profile', {}, 'agent'),
+  getProfile: () => fetchApi('/api/agent-auth/profile', {}, 'agent'),
   
-  updateProfile: (data: any) => fetchApi('/agent-auth/profile', {
+  updateProfile: (data: any) => fetchApi('/api/agent-auth/profile', {
     method: 'PUT',
     body: JSON.stringify(data),
   }, 'agent'),
   
-  changePassword: (currentPassword: string, newPassword: string) => fetchApi('/agent-auth/change-password', {
+  changePassword: (currentPassword: string, newPassword: string) => fetchApi('/api/agent-auth/change-password', {
     method: 'PUT',
     body: JSON.stringify({ currentPassword, newPassword }),
   }, 'agent'),
@@ -106,28 +106,28 @@ export const agentAuthApi = {
 // ==================== ADMIN AUTH APIs ====================
 
 export const adminAuthApi = {
-  login: (email: string, password: string) => fetchApi('/admin-auth/login', {
+  login: (email: string, password: string) => fetchApi('/api/admin-auth/login', {
     method: 'POST',
     body: JSON.stringify({ email, password }),
   }, 'admin'),
   
-  getProfile: () => fetchApi('/admin-auth/profile', {}, 'admin'),
+  getProfile: () => fetchApi('/api/admin-auth/profile', {}, 'admin'),
   
-  getDashboardStats: () => fetchApi('/admin-auth/dashboard/stats', {}, 'admin'),
+  getDashboardStats: () => fetchApi('/api/admin-auth/dashboard/stats', {}, 'admin'),
   
-  getPendingAgents: () => fetchApi('/admin-auth/agents/pending', {}, 'admin'),
+  getPendingAgents: () => fetchApi('/api/admin-auth/agents/pending', {}, 'admin'),
   
   getAllAgents: (params?: { status?: string; approvalStatus?: string }) => {
     const query = new URLSearchParams(params || {}).toString();
-    return fetchApi(`/admin-auth/agents?${query}`, {}, 'admin');
+    return fetchApi(`/api/admin-auth/agents?${query}`, {}, 'admin');
   },
   
-  approveAgent: (agentId: string, action: 'APPROVE' | 'REJECT', rejectionReason?: string) => fetchApi(`/admin-auth/agents/${agentId}/approve`, {
+  approveAgent: (agentId: string, action: 'APPROVE' | 'REJECT', rejectionReason?: string) => fetchApi(`/api/admin-auth/agents/${agentId}/approve`, {
     method: 'PUT',
     body: JSON.stringify({ action, rejectionReason }),
   }, 'admin'),
   
-  updateAgentStatus: (agentId: string, action: string, reason?: string) => fetchApi(`/admin-auth/agents/${agentId}/status`, {
+  updateAgentStatus: (agentId: string, action: string, reason?: string) => fetchApi(`/api/admin-auth/agents/${agentId}/status`, {
     method: 'PUT',
     body: JSON.stringify({ action, reason }),
   }, 'admin'),
@@ -254,43 +254,43 @@ export const casesApi = {
   // Admin endpoints
   getAllCases: (filters?: { status?: string; agentId?: string; priority?: string }) => {
     const query = new URLSearchParams(filters || {}).toString();
-    return fetchApi(`/cases?${query}`, {}, 'admin');
+    return fetchApi(`/api/cases?${query}`, {}, 'admin');
   },
   
-  getAdminCaseDetails: (caseId: string) => fetchApi(`/cases/admin/${caseId}`, {}, 'admin'),
+  getAdminCaseDetails: (caseId: string) => fetchApi(`/api/cases/admin/${caseId}`, {}, 'admin'),
   
-  assignCase: (caseId: string, agentId: number, notes?: string) => fetchApi(`/cases/${caseId}/assign`, {
+  assignCase: (caseId: string, agentId: number, notes?: string) => fetchApi(`/api/cases/${caseId}/assign`, {
     method: 'PUT',
     body: JSON.stringify({ agentId, notes }),
   }, 'admin'),
   
-  reassignCase: (caseId: string, newAgentId: number, reason?: string) => fetchApi(`/cases/${caseId}/reassign`, {
+  reassignCase: (caseId: string, newAgentId: number, reason?: string) => fetchApi(`/api/cases/${caseId}/reassign`, {
     method: 'PUT',
     body: JSON.stringify({ newAgentId, reason }),
   }, 'admin'),
   
-  updateCaseStatusAdmin: (caseId: string, status: string, notes?: string) => fetchApi(`/cases/${caseId}/status`, {
+  updateCaseStatusAdmin: (caseId: string, status: string, notes?: string) => fetchApi(`/api/cases/${caseId}/status`, {
     method: 'PUT',
     body: JSON.stringify({ status, notes }),
   }, 'admin'),
   
-  addAdminNote: (caseId: string, adminNotes: string, msmeNotes?: string) => fetchApi(`/cases/${caseId}/notes/admin`, {
+  addAdminNote: (caseId: string, adminNotes: string, msmeNotes?: string) => fetchApi(`/api/cases/${caseId}/notes/admin`, {
     method: 'PUT',
     body: JSON.stringify({ adminNotes, msmeNotes, noteType: 'ADMIN' }),
   }, 'admin'),
 
   // Eligibility check with caching
-  checkEligibility: (schemeId: string, msmeUserId: number, completedTasks?: string[]) => fetchApi('/schemes/eligibility-check', {
+  checkEligibility: (schemeId: string, msmeUserId: number, completedTasks?: string[]) => fetchApi('/api/schemes/eligibility-check', {
     method: 'POST',
     body: JSON.stringify({ schemeId, msmeUserId, completedTasks }),
   }, 'msme'),
 
-  completeEligibilityTask: (schemeId: string, msmeUserId: number, taskId: string) => fetchApi('/schemes/eligibility-check/complete-task', {
+  completeEligibilityTask: (schemeId: string, msmeUserId: number, taskId: string) => fetchApi('/api/schemes/eligibility-check/complete-task', {
     method: 'POST',
     body: JSON.stringify({ schemeId, msmeUserId, taskId }),
   }, 'msme'),
 
-  updateProfileField: (msmeUserId: number, field: string, value: any) => fetchApi('/schemes/eligibility-check/update-profile', {
+  updateProfileField: (msmeUserId: number, field: string, value: any) => fetchApi('/api/schemes/eligibility-check/update-profile', {
     method: 'POST',
     body: JSON.stringify({ msmeUserId, field, value }),
   }, 'msme'),
